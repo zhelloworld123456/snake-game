@@ -233,90 +233,21 @@
             min-height: 30px;
         }
         
-        .stats-container {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 15px;
-            margin-top: 20px;
-        }
-        
-        .stat-box {
-            background: white;
-            padding: 15px;
-            border-radius: 10px;
-            text-align: center;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
-        }
-        
-        .stat-value {
-            font-size: 1.8em;
-            font-weight: bold;
-            color: #667eea;
-            margin-top: 5px;
-        }
-        
-        .stat-label {
-            color: #666;
-            font-size: 0.9em;
-        }
-        
-        .level-indicator {
-            background: linear-gradient(45deg, #FF9800, #FF5722);
-            color: white;
-            padding: 8px 15px;
-            border-radius: 20px;
-            font-weight: bold;
-            display: inline-block;
-            margin-bottom: 15px;
-        }
-        
-        .progress-bar {
-            height: 10px;
-            background: #e9ecef;
-            border-radius: 5px;
-            margin: 15px 0;
-            overflow: hidden;
-        }
-        
-        .progress-fill {
-            height: 100%;
-            background: linear-gradient(45deg, #4CAF50, #45a049);
-            width: 0%;
-            transition: width 0.3s ease;
-        }
-        
-        .time-remaining {
-            font-size: 1.2em;
-            font-weight: bold;
-            color: #333;
-            text-align: center;
-            margin: 10px 0;
-        }
-        
-        .achievements {
+        .food-counter {
             display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
+            justify-content: space-between;
             margin-top: 15px;
-        }
-        
-        .achievement {
-            background: #f8f9fa;
-            border: 2px solid #e9ecef;
+            padding: 10px;
+            background: white;
             border-radius: 8px;
-            padding: 8px 12px;
-            font-size: 0.9em;
-            display: flex;
-            align-items: center;
-            gap: 5px;
         }
         
-        .achievement.locked {
-            opacity: 0.5;
+        .food-item {
+            text-align: center;
         }
         
-        .achievement-icon {
-            font-size: 1.2em;
+        .food-emoji {
+            font-size: 1.5em;
         }
     </style>
 </head>
@@ -365,49 +296,21 @@
                     </div>
                 </div>
                 
-                <div class="level-indicator" id="levelIndicator">关卡 1</div>
-                
-                <div class="time-remaining" id="timeRemaining">时间: 60秒</div>
-                
-                <div class="progress-bar">
-                    <div class="progress-fill" id="levelProgress"></div>
-                </div>
-                
-                <div class="stats-container">
-                    <div class="stat-box">
-                        <div class="stat-label">当前关卡</div>
-                        <div class="stat-value" id="currentLevel">1</div>
+                <div class="food-counter">
+                    <div class="food-item">
+                        <div class="food-emoji">🍎</div>
+                        <div>普通食物</div>
+                        <div id="normalFood">0</div>
                     </div>
-                    <div class="stat-box">
-                        <div class="stat-label">最高分</div>
-                        <div class="stat-value" id="highScore">0</div>
+                    <div class="food-item">
+                        <div class="food-emoji">🍒</div>
+                        <div>加速食物</div>
+                        <div id="speedFood">0</div>
                     </div>
-                    <div class="stat-box">
-                        <div class="stat-label">游戏时长</div>
-                        <div class="stat-value" id="playTime">0s</div>
-                    </div>
-                    <div class="stat-box">
-                        <div class="stat-label">移动次数</div>
-                        <div class="stat-value" id="moveCount">0</div>
-                    </div>
-                </div>
-                
-                <div class="achievements" id="achievementsContainer">
-                    <div class="achievement locked">
-                        <span class="achievement-icon">🥇</span>
-                        <span>首关通关</span>
-                    </div>
-                    <div class="achievement locked">
-                        <span class="achievement-icon">⚡</span>
-                        <span>速度达人</span>
-                    </div>
-                    <div class="achievement locked">
-                        <span class="achievement-icon">🎯</span>
-                        <span>精准大师</span>
-                    </div>
-                    <div class="achievement locked">
-                        <span class="achievement-icon">🏆</span>
-                        <span>高分王者</span>
+                    <div class="food-item">
+                        <div class="food-emoji">🍇</div>
+                        <div>减速食物</div>
+                        <div id="slowFood">0</div>
                     </div>
                 </div>
                 
@@ -420,24 +323,15 @@
         </div>
         
         <div class="instructions">
-            <h3>📖 游戏说明 - 增强版</h3>
+            <h3>📖 游戏说明</h3>
             <ul>
-                <li><strong>关卡系统</strong>: 每得100分进入下一关，难度增加</li>
-                <li><strong>时间挑战</strong>: 每关有时间限制，超时游戏结束</li>
-                <li><strong>障碍物系统</strong>: 从第2关开始出现障碍物，需要避开</li>
-                <li><strong>多种食物</strong>:
-                    <ul>
-                        <li>🍎 普通食物: +10分</li>
-                        <li>🍒 加速食物: +20分，蛇速加快</li>
-                        <li>🍇 减速食物: +15分，蛇速减慢</li>
-                        <li>⭐ 星星食物: +30分，直接进入下一关</li>
-                        <li>💣 炸弹食物: -20分，蛇身缩短</li>
-                    </ul>
-                </li>
-                <li><strong>成就系统</strong>: 完成特定目标解锁成就</li>
-                <li><strong>统计系统</strong>: 记录游戏时长、移动次数等数据</li>
-                <li><strong>控制方式</strong>: 键盘方向键控制，空格暂停，R键重置</li>
-                <li><strong>移动端</strong>: 支持屏幕按钮控制</li>
+                <li>使用键盘方向键控制蛇的移动方向</li>
+                <li>吃到红色食物 🍎 得 10 分，蛇身长度增加</li>
+                <li>吃到橙色食物 🍒 得 20 分，蛇移动速度加快</li>
+                <li>吃到紫色食物 🍇 得 15 分，蛇移动速度减慢</li>
+                <li>撞到墙壁或自己的身体游戏结束</li>
+                <li>空格键暂停/继续游戏，R 键重新开始</li>
+                <li>在手机上可以使用屏幕上的方向按钮控制</li>
             </ul>
         </div>
     </div>
