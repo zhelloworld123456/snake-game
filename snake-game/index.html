@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>贪吃蛇游戏 - Snake Game</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        
+        .container {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            max-width: 800px;
+            width: 100%;
+        }
+        
+        h1 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 10px;
+            font-size: 2.5em;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 1.1em;
+        }
+        
+        .game-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 30px;
+            justify-content: center;
+        }
+        
+        .game-board {
+            flex: 1;
+            min-width: 300px;
+        }
+        
+        #gameCanvas {
+            border: 3px solid #667eea;
+            border-radius: 10px;
+            background: #f8f9fa;
+            display: block;
+            margin: 0 auto;
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.2);
+        }
+        
+        .game-info {
+            flex: 1;
+            min-width: 300px;
+            background: #f8f9fa;
+            padding: 25px;
+            border-radius: 15px;
+            border: 2px solid #e9ecef;
+        }
+        
+        .score-container {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 25px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        }
+        
+        .score {
+            font-size: 2.5em;
+            font-weight: bold;
+            color: #667eea;
+            text-align: center;
+        }
+        
+        .score-label {
+            text-align: center;
+            color: #666;
+            font-size: 1.1em;
+            margin-bottom: 5px;
+        }
+        
+        .controls {
+            margin-bottom: 25px;
+        }
+        
+        h3 {
+            color: #333;
+            margin-bottom: 15px;
+            font-size: 1.3em;
+        }
+        
+        .control-item {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            border-left: 4px solid #667eea;
+        }
+        
+        .key {
+            display: inline-block;
+            background: #667eea;
+            color: white;
+            padding: 5px 12px;
+            border-radius: 6px;
+            font-weight: bold;
+            margin: 0 5px;
+            min-width: 40px;
+            text-align: center;
+        }
+        
+        .buttons {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        button {
+            flex: 1;
+            padding: 15px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        #startBtn {
+            background: linear-gradient(45deg, #4CAF50, #45a049);
+            color: white;
+        }
+        
+        #startBtn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(76, 175, 80, 0.3);
+        }
+        
+        #pauseBtn {
+            background: linear-gradient(45deg, #FF9800, #F57C00);
+            color: white;
+        }
+        
+        #pauseBtn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(255, 152, 0, 0.3);
+        }
+        
+        #resetBtn {
+            background: linear-gradient(45deg, #f44336, #d32f2f);
+            color: white;
+        }
+        
+        #resetBtn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(244, 67, 54, 0.3);
+        }
+        
+        .instructions {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 25px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        }
+        
+        .instructions ul {
+            padding-left: 20px;
+        }
+        
+        .instructions li {
+            margin-bottom: 10px;
+            color: #555;
+        }
+        
+        .mobile-controls {
+            display: none;
+            margin-top: 20px;
+            gap: 10px;
+            justify-content: center;
+        }
+        
+        .mobile-btn {
+            width: 60px;
+            height: 60px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            font-size: 1.5em;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+        }
+        
+        @media (max-width: 768px) {
+            .mobile-controls {
+                display: flex;
+            }
+            
+            .game-container {
+                flex-direction: column;
+            }
+        }
+        
+        .game-status {
+            text-align: center;
+            margin-top: 15px;
+            font-size: 1.2em;
+            font-weight: bold;
+            color: #333;
+            min-height: 30px;
+        }
+        
+        .food-counter {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 15px;
+            padding: 10px;
+            background: white;
+            border-radius: 8px;
+        }
+        
+        .food-item {
+            text-align: center;
+        }
+        
+        .food-emoji {
+            font-size: 1.5em;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🐍 贪吃蛇游戏</h1>
+        <p class="subtitle">经典贪吃蛇游戏 - 使用键盘方向键控制</p>
+        
+        <div class="game-container">
+            <div class="game-board">
+                <canvas id="gameCanvas" width="400" height="400"></canvas>
+                <div class="game-status" id="gameStatus">点击开始游戏</div>
+                
+                <div class="mobile-controls">
+                    <button class="mobile-btn" id="upBtn">↑</button>
+                    <div>
+                        <button class="mobile-btn" id="leftBtn">←</button>
+                        <button class="mobile-btn" id="downBtn">↓</button>
+                        <button class="mobile-btn" id="rightBtn">→</button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="game-info">
+                <div class="score-container">
+                    <div class="score-label">当前得分</div>
+                    <div class="score" id="score">0</div>
+                </div>
+                
+                <div class="controls">
+                    <h3>🎮 游戏控制</h3>
+                    <div class="control-item">
+                        <span>移动控制：</span>
+                        <span class="key">↑</span>
+                        <span class="key">↓</span>
+                        <span class="key">←</span>
+                        <span class="key">→</span>
+                    </div>
+                    <div class="control-item">
+                        <span>暂停/继续：</span>
+                        <span class="key">空格</span>
+                    </div>
+                    <div class="control-item">
+                        <span>重新开始：</span>
+                        <span class="key">R</span>
+                    </div>
+                </div>
+                
+                <div class="food-counter">
+                    <div class="food-item">
+                        <div class="food-emoji">🍎</div>
+                        <div>普通食物</div>
+                        <div id="normalFood">0</div>
+                    </div>
+                    <div class="food-item">
+                        <div class="food-emoji">🍒</div>
+                        <div>加速食物</div>
+                        <div id="speedFood">0</div>
+                    </div>
+                    <div class="food-item">
+                        <div class="food-emoji">🍇</div>
+                        <div>减速食物</div>
+                        <div id="slowFood">0</div>
+                    </div>
+                </div>
+                
+                <div class="buttons">
+                    <button id="startBtn">开始游戏</button>
+                    <button id="pauseBtn">暂停游戏</button>
+                    <button id="resetBtn">重新开始</button>
+                </div>
+            </div>
+        </div>
+        
+        <div class="instructions">
+            <h3>📖 游戏说明</h3>
+            <ul>
+                <li>使用键盘方向键控制蛇的移动方向</li>
+                <li>吃到红色食物 🍎 得 10 分，蛇身长度增加</li>
+                <li>吃到橙色食物 🍒 得 20 分，蛇移动速度加快</li>
+                <li>吃到紫色食物 🍇 得 15 分，蛇移动速度减慢</li>
+                <li>撞到墙壁或自己的身体游戏结束</li>
+                <li>空格键暂停/继续游戏，R 键重新开始</li>
+                <li>在手机上可以使用屏幕上的方向按钮控制</li>
+            </ul>
+        </div>
+    </div>
+
+    <script src="snake.js"></script>
+</body>
+</html>
