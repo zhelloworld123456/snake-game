@@ -18,9 +18,19 @@ class FixedSnakeGame {
         this.direction = { x: 0, y: 0 };
         this.nextDirection = { x: 0, y: 0 };
         this.score = 0;
-        this.gameSpeed = 150;
+        this.gameSpeed = 250; // 降低速度：从150ms增加到250ms（默认中等速度）
         this.gameRunning = false;
         this.gamePaused = false;
+        
+        // 速度配置
+        this.speedLevels = [
+            { speed: 400, label: '很慢', desc: '400ms/步' },
+            { speed: 300, label: '较慢', desc: '300ms/步' },
+            { speed: 250, label: '中等', desc: '250ms/步' },
+            { speed: 200, label: '较快', desc: '200ms/步' },
+            { speed: 150, label: '很快', desc: '150ms/步' }
+        ];
+        this.currentSpeedIndex = 2; // 默认中等速度
         
         // 初始化
         this.init();
@@ -97,6 +107,13 @@ class FixedSnakeGame {
         document.getElementById('rightBtn').addEventListener('click', () => {
             if (this.direction.x === 0) this.nextDirection = { x: 1, y: 0 };
         });
+        
+        // 速度控制
+        document.getElementById('speedDownBtn').addEventListener('click', () => this.adjustSpeed(-1));
+        document.getElementById('speedUpBtn').addEventListener('click', () => this.adjustSpeed(1));
+        
+        // 初始化速度显示
+        this.updateSpeedDisplay();
     }
     
     startGame() {
@@ -223,6 +240,28 @@ class FixedSnakeGame {
     
     updateScore() {
         this.scoreElement.textContent = this.score;
+    }
+    
+    adjustSpeed(change) {
+        const newIndex = this.currentSpeedIndex + change;
+        
+        // 检查边界
+        if (newIndex >= 0 && newIndex < this.speedLevels.length) {
+            this.currentSpeedIndex = newIndex;
+            this.gameSpeed = this.speedLevels[newIndex].speed;
+            this.updateSpeedDisplay();
+            
+            // 如果游戏正在运行，更新状态显示
+            if (this.gameRunning && !this.gamePaused) {
+                this.gameStatusElement.textContent = `游戏进行中... (${this.speedLevels[newIndex].label})`;
+            }
+        }
+    }
+    
+    updateSpeedDisplay() {
+        const speedLevel = this.speedLevels[this.currentSpeedIndex];
+        document.getElementById('speedDisplay').textContent = speedLevel.label;
+        document.getElementById('speedValue').textContent = speedLevel.desc;
     }
     
     gameOver() {
