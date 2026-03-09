@@ -1,4 +1,4 @@
-// 增强版贪吃蛇游戏 JavaScript
+// 增强版贪吃蛇游戏 JavaScript - 完整版
 class EnhancedSnakeGame {
     constructor() {
         this.canvas = document.getElementById('gameCanvas');
@@ -477,6 +477,8 @@ class EnhancedSnakeGame {
         // 检查成就
         this.checkAchievement('precisionMaster', this.foodStats.normal >= 10);
         this.checkAchievement('highScoreKing', this.score >= 500);
+        this.checkAchievement('obstacleDodger', this.moveCount >= 10 && this.level >= 2);
+        this.checkAchievement('timeMaster', this.timeRemaining >= 30);
     }
     
     checkFoods() {
@@ -536,10 +538,3 @@ class EnhancedSnakeGame {
             this.achievements[achievementKey].unlocked = true;
             this.updateAchievementsDisplay();
             
-            // 显示成就解锁提示
-            this.showAchievementUnlocked(achievementKey);
-        }
-    }
-    
-    showAchievementUnlocked(achievementKey) {
-        const achievement =
